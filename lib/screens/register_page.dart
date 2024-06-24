@@ -3,7 +3,6 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:school/screens/login_page.dart';
 import 'package:school/widget/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:school/widget/custom_text_form_field.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({super.key});
@@ -27,21 +26,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
-  }
-
-  void _submit() {
-    if (formKey.currentState!.validate()) {
-      // Process data
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Processing Data')),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,33 +54,95 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ],
                   ),
-                  CustomTextFormField(
-                    fieldName: 'Username',
-                    inputType: TextInputType.emailAddress,
-                    hintText: 'Enter your username',
-                    obscureText: false,
-                    controller: _usernameController,
-                    onChanged: (data) {
-                      email = data;
-                    },
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        right: 20, top: 10, bottom: 10, left: 20),
+                    child: TextFormField(
+                      controller: _usernameController,
+                      validator: (data) {
+                        if (data!.isEmpty) {
+                          return ' Username is required';
+                        }
+                      },
+                      onChanged: (data) {
+                        email = data;
+                      },
+                      obscureText: false,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        hintStyle: TextStyle(color: Colors.grey.shade400),
+                        hintText: 'Enter Username',
+                        label: Text('Username'),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(),
+                            borderRadius: BorderRadius.circular(8)),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
                   ),
-                  CustomTextFormField(
-                    onChanged: (data) {
-                      password = data;
-                    },
-                    fieldName: 'Password',
-                    inputType: TextInputType.text,
-                    hintText: 'Enter yor password',
-                    obscureText: true,
-                    controller: _passwordController,
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        right: 20, top: 10, bottom: 10, left: 20),
+                    child: TextFormField(
+                      controller: _passwordController,
+                      validator: (data) {
+                        if (data!.isEmpty) {
+                          return ' password is required';
+                        }
+                      },
+                      onChanged: (data) {
+                        password = data;
+                      },
+                      obscureText: true,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        hintStyle: TextStyle(color: Colors.grey.shade400),
+                        hintText: 'Enter password',
+                        label: Text('password'),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(),
+                            borderRadius: BorderRadius.circular(8)),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
                   ),
-                  CustomTextFormField(
-                    onChanged: (data) {},
-                    fieldName: 'Verifying Password',
-                    inputType: TextInputType.text,
-                    hintText: 'Enter yor verified password',
-                    obscureText: true,
-                    controller: _confirmPasswordController,
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        right: 20, top: 10, bottom: 10, left: 20),
+                    child: TextFormField(
+                      controller: _confirmPasswordController,
+                      validator: (data) {
+                        if (data!.isEmpty) {
+                          return ' confirm password is required';
+                        }
+                        if (data != _passwordController.text) {
+                          return 'Passwords do not match';
+                        }
+                      },
+                      onChanged: (data) {
+                        email = data;
+                      },
+                      obscureText: true,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        hintStyle: TextStyle(color: Colors.grey.shade400),
+                        hintText: 'Enter confirm password',
+                        label: Text('Confirm password'),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(),
+                            borderRadius: BorderRadius.circular(8)),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
@@ -104,22 +150,24 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: CustomButon(
                       text: 'Sign Up',
                       onTap: () async {
-                        // if (formKey.currentState!.validate()) {
-                        //   isLoading = true;
-                        //   try {
-                        //     await signUp();
-                        //     showSnackBar(context, 'Registration success !');
-                        //   } on FirebaseAuthException catch (e) {
-                        //     if (e.code == 'weak-password') {
-                        //       showSnackBar(context, 'Week password !');
-                        //     } else if (e.code == 'email-already-in-use') {
-                        //       showSnackBar(context, 'Email is already exist !');
-                        //     }
-                        //   } catch (e) {
-                        //     showSnackBar(context, 'there is an error');
-                        //   }
-                        //   isLoading = false;
-                        // } else {}
+                        if (formKey.currentState!.validate()) {
+                          isLoading = true;
+                          try {
+                            await signUp();
+                            showSnackBar(context, 'Registration success !');
+                          } on FirebaseAuthException catch (e) {
+                            if (e.code == 'weak-password') {
+                              showSnackBar(context, 'Week password !');
+                            } else if (e.code == 'email-already-in-use') {
+                              showSnackBar(context, 'Email is already exist !');
+                            }
+                          } catch (e) {
+                            showSnackBar(context, 'there is an error');
+                          }
+                          isLoading = false;
+                        } else {
+                          showSnackBar(context, 'there is an error');
+                        }
                       },
                     ),
                   ),

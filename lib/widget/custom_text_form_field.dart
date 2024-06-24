@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  CustomTextFormField(
-      {required this.inputType,
-      required this.fieldName,
-      required this.hintText,
-      required this.controller,
-      required this.obscureText,
-      required this.onChanged});
+  CustomTextFormField({
+    required this.inputType,
+    required this.fieldName,
+    required this.hintText,
+    required this.controller,
+    required this.obscureText,
+    required this.onChanged,
+  });
 
   final TextInputType inputType;
   Function(String)? onChanged;

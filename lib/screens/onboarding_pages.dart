@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:lottie/lottie.dart';
 import 'package:school/screens/login_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
